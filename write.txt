@@ -1,0 +1,12 @@
+AVERAGE AGE OF GENERATION 1=-1.#IND00
+name of the elder is 
+************************************
+AVERAGE AGE OF GENERATION 2=0.000000
+name of the elder is 
+************************************
+AVERAGE AGE OF GENERATION 3=0.000000
+name of the elder is 
+************************************
+AVERAGE AGE OF GENERATION 4=0.000000
+name of the elder is 
+************************************
