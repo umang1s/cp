@@ -1,3 +1,6 @@
 *.exe
 *.o
 *.class
+aa_test.cpp
+delete.cpp
+temp.cpp

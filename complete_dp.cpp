@@ -155,10 +155,115 @@ string get_longest_common_subsequence(string &a,string &b){
 }
 
 int shortest_common_super_sequence(string &a,string &b){
-    
+    return a.length()+b.length()-length_of_lcs(a,b);
+}
+string get_shortest_common_super_sequence_dp(string&a, string &b){
+    int n=a.length(),m=b.length();
+    vector<vector<int>> dp(n+1,vector<int>(m+1));
+    for(int i=0; i<=n; i++) dp[i][0]=0;
+    for(int j=0; j<=m; j++) dp[0][j]=0;
+    for(int i=1; i<=n; i++) for(int j=1; j<=m ;j++){
+        if(a[i-1]==b[j-1]) dp[i][j]=1+dp[i-1][j-1];
+        else dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+    }
+    string ans="";
+    while(n && m){
+        if(a[n-1]==b[m-1]) ans+=a[n-1],n--,m--;
+        else{
+            if(dp[n][m-1]<dp[n-1][m]) ans+=a[n-1],n--;
+            else ans+=b[m-1],m--;
+        }
+    }
+    reverse(ans.begin(),ans.end());
+    return ans;
+}
+
+string get_shortest_common_super_sequence(string&a, string &b){
+    string ans="";
+    string ls=get_longest_common_subsequence(a,b);
+    int i=0,j=0,k=0;
+    while(k<ls.length()){
+        if(ls[k]==a[i] &&  ls[k]==b[j]) ans+=ls[k],k++,i++,j++;
+        else{
+            if(ls[k]==a[i]) ans+=b[j],j++;
+            else ans+=a[i],i++;
+        }
+    }
+    while(i<a.length()) ans+=a[i],i++;
+    while(j<b.length()) ans+=b[j],j++;
+    return ans;
 }
 
 
+int min_no_of_insertion_and_deletion_to_make_a_to_b(string &a,string &b){
+    int ls=length_of_lcs(a,b);
+    int insertion=a.length()-ls;
+    int deletion=b.length()-ls;
+    return insertion+deletion;
+}
+
+int largest_palindromic_subsequence(string &a){
+    string rev=a;
+    reverse(a.begin(),a.end());
+    return length_of_lcs(a,rev);
+}
+int min_no_of_deletion_to_make_it_palindrome(string &a){
+    return a.length()-largest_palindromic_subsequence(a);
+}
+
+int longest_repeating_sub_sequence(string &a){
+    int n=a.length();
+    vector<vector<int>> dp(n+1,vector<int>(n+1));
+    for(int i=0; i<=n; i++) dp[i][0]=dp[0][i]=0;
+    for(int i=1; i<=n; i++) for(int j=1; j<=n; j++){
+        if(i!=j && a[i-1]==a[j-1]) dp[i][j]=1+dp[i-1][j-1];
+        else dp[i][j]=max(dp[i][j-1],dp[i-1][j]);
+    }
+    return dp[n][n];
+}
+
+int length_of_longest_increasing_subsequence_method_1(vector<int> &arr){
+    vector<int> ans;
+    for(int i: arr){
+        auto it=lower_bound(ans.begin(),ans.end(),i);
+        if(it==ans.end()) ans.push_back(i);
+        else if(*it>i) *it=i;
+    }
+    return ans.size();
+}
+int length_of_longest_increasing_subsequence_method_2(vector<int> &arr){
+    vector<int> dp(arr.size(),1);
+    for(int i=0; i<arr.size(); i++) for(int j=0; j<i; j++){
+        if(arr[i]>arr[j] && dp[i]<=dp[j]) dp[i]=1+dp[j];
+    }
+    int mx=0;
+    for(auto i: dp) mx=max(mx,i);
+    return mx;
+}
+vector<int> get_longest_increasing_subsequence(vector<int> &arr){
+    vector<int> dp(arr.size(),1),ans;
+    for(int i=0; i<arr.size(); i++) for(int j=0; j<i; j++) if(arr[i]>arr[j] && dp[i]<=dp[j]) dp[i]=1+dp[j];
+    int mx=0;
+    for(auto i: dp) mx=max(mx,i);
+    int ind=arr.size()-1;
+    while(mx){
+        if(dp[ind]==mx) ans.push_back(arr[ind]),mx--;
+        ind--;
+    }
+    reverse(ans.begin(),ans.end());
+    return ans;
+}
+int number_of_longest_increasing_subsequene(vector<int> &arr){
+    vector<int> dp(arr.size(),1),count(arr.size(),1);
+    for(int i=0; i<arr.size(); i++) for(int j=0; j<i; j++) if(arr[i]>arr[j]){
+        if(dp[j]+1>dp[i]) dp[i]=1+dp[j],count[i]=count[j];
+        else if(dp[j]+1==dp[i]) count[i]+=count[j];
+    }
+    int mx=0,ans=0;
+    for(auto i: dp) mx=max(mx,i);
+    for(int i=0; i<arr.size(); i++) if(dp[i]==mx) ans+=count[i];
+    return ans;
+}
 
 
 void solve(){
@@ -168,4 +273,23 @@ void solve(){
     vector<vector<int>> dp(a.length()+1,vector<int>(b.length()+1,-1));
     cout<<longest_common_substring(a,b)<<nl;
     cout<<get_longest_common_subsequence(a,b)<<nl;
+    cout<<shortest_common_super_sequence(a,b)<<nl;
+    cout<<get_shortest_common_super_sequence(a,b)<<nl;
+    cout<<get_shortest_common_super_sequence_dp(a,b)<<nl;
+    cout<<min_no_of_insertion_and_deletion_to_make_a_to_b(a,b)<<nl;
+    string c;
+    cin>>c;
+    cout<<largest_palindromic_subsequence(c)<<nl;
+    cout<<min_no_of_deletion_to_make_it_palindrome(c)<<nl;
+    cout<<longest_repeating_sub_sequence(c)<<nl;
+    int n;
+    cin>>n;
+    vector<int> arr(n);
+    for(auto &i: arr) cin>>i;
+    cout<<length_of_longest_increasing_subsequence_method_1(arr)<<nl;
+    cout<<length_of_longest_increasing_subsequence_method_2(arr)<<nl;
+    vector<int> lisArray=get_longest_increasing_subsequence(arr);
+    for(auto i: lisArray) cout<<i<<spc;
+    cout<<nl;
+    cout<<number_of_longest_increasing_subsequene(arr)<<nl;
 }
