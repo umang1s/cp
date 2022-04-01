@@ -2,4 +2,4 @@ abcdeg
 abuicde
 abcdabc
 5
-2 2 2 2 2
+1 100 3 2 6

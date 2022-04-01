@@ -265,6 +265,97 @@ int number_of_longest_increasing_subsequene(vector<int> &arr){
     return ans;
 }
 
+int box_stacking_problem(vector<vector<int>> &boxes){
+    //height,width,length
+    //not solved
+    int ans=0;
+    vector<vector<int>> allBoxes;
+    for(auto i: boxes){
+        allBoxes.push_back({i[0],i[1],i[2]});
+        allBoxes.push_back({i[0],i[2],i[1]});
+        allBoxes.push_back({i[1],i[2],i[0]});
+        allBoxes.push_back({i[1],i[0],i[2]});
+        allBoxes.push_back({i[2],i[1],i[0]});
+        allBoxes.push_back({i[2],i[0],i[1]});
+    }
+    sort(allBoxes.begin(),allBoxes.end());
+    int n=allBoxes.size();
+    vector<int> dp(n,1);
+    for(int i=0; i<n; i++)for(int j=0; j<i; j++){
+        if(allBoxes[i][1]>allBoxes[j][1] && allBoxes[i][2]>allBoxes[j][2] && dp[i]<=dp[j])
+            dp[i]=1+dp[j];
+    }
+    int mx=0;
+    for(auto i: dp) mx=max(mx,i);
+    int ind=n-1;
+    while(mx){
+        if(dp[ind]==mx) ans+=allBoxes[ind][0],mx--;
+        ind--;
+    }
+    return ans;
+}
+
+bool envelop_sorting(vector<int> &a,vector<int>&b){
+    if(a[0]<b[0]) return true;
+    if(a[0]>b[0]) return false;
+    return a[1]>b[1];
+}
+int russian_doll_problem_method1(vector<vector<int>> &envelopes){
+    if(envelopes.size()==0) return 0;
+    sort(envelopes.begin(),envelopes.end(),envelop_sorting);
+    vector<int> second;
+    for(auto i: envelopes) second.push_back(i[1]);
+    return length_of_longest_increasing_subsequence_method_1(second);
+}
+int russian_doll_problem_method2(vector<vector<int>> &envelopes){
+    int n=envelopes.size();
+    if(n==0) return 0;
+    sort(envelopes.begin(),envelopes.end());
+    vector<int> dp(n,1);
+    for(int i=0; i<n; i++) for(int j=0; j<i; j++){
+        if(envelopes[i][0]>envelopes[j][0] && envelopes[i][1]>envelopes[j][1] && dp[i]<=dp[j])
+            dp[i]=1+dp[j];
+    }
+    int mx=0;
+    for(auto i: dp) mx=max(mx,i);
+    return mx;
+}
+
+int maximum_sum_increasing_subsequence(vector<int> &arr){
+    //1 100 3 2 6  
+    //(1+2+6=9), (1+3+6)=10, (1+100)=101  output 101
+    int n=arr.size();
+    vector<int> dp(n,1),sum(n);
+    for(int i=0; i<n; i++) sum[i]=arr[i];
+    for(int i=0; i<n; i++) for(int j=0; j<i; j++){
+        if(arr[i]>arr[j] && dp[i]<=dp[j]) dp[i]=1+dp[j],sum[i]+=arr[j]; 
+    }
+    int mx=0;
+    for(auto i:sum) mx=max(mx,i);
+    return mx;
+
+}
+
+
+//////////////////// MCM //////////////////////////////////////////////////////////
+
+int matrix_chain_multiplication(vector<vector<int>> &dp, vector<int> &arr,int i,int j){
+    if(i>=j) return 0;
+    if(dp[i][j]==-1){
+        int mn=INT_MAX;
+        for(int x=i; x<j; x++){
+            int temp=matrix_chain_multiplication(dp,arr,i,x)+matrix_chain_multiplication(dp,arr,x+1,j)+arr[i-1]*arr[x]*arr[j];
+            mn=min(mn,temp);
+        }
+        dp[i][j]=mn;
+    }
+    return dp[i][j];
+}
+
+int palindrome_patiotioning(string &s){
+    //minimum number of partition to make all substring palindrome
+    return 0;
+}
 
 void solve(){
     string a,b;
@@ -292,4 +383,5 @@ void solve(){
     for(auto i: lisArray) cout<<i<<spc;
     cout<<nl;
     cout<<number_of_longest_increasing_subsequene(arr)<<nl;
+    cout<<maximum_sum_increasing_subsequence(arr)<<nl;
 }
