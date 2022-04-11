@@ -210,8 +210,12 @@ int largest_palindromic_subsequence(string &a){
 int min_no_of_deletion_to_make_it_palindrome(string &a){
     return a.length()-largest_palindromic_subsequence(a);
 }
+int min_no_of_insertion_to_make_it_palindrome(string &a){
+    return a.length()-largest_palindromic_subsequence(a);
+}
 
-int longest_repeating_sub_sequence(string &a){
+int longest_repeating_sub_sequence(string &a){  
+    //aabebcdd   //abc
     int n=a.length();
     vector<vector<int>> dp(n+1,vector<int>(n+1));
     for(int i=0; i<=n; i++) dp[i][0]=dp[0][i]=0;
@@ -263,6 +267,15 @@ int number_of_longest_increasing_subsequene(vector<int> &arr){
     for(auto i: dp) mx=max(mx,i);
     for(int i=0; i<arr.size(); i++) if(dp[i]==mx) ans+=count[i];
     return ans;
+}
+
+int maximum_number_of_bridge_can_connect(vector<pair<int,int>> &connections){
+    //if duplicate is not allowed
+    int n=connections.size();
+    sort(connections.begin(),connections.end());
+    vector<int> arr;
+    for(auto i: connections) arr.push_back(i.second);
+    return length_of_longest_increasing_subsequence_method_1(arr);
 }
 
 int box_stacking_problem(vector<vector<int>> &boxes){
@@ -337,9 +350,10 @@ int maximum_sum_increasing_subsequence(vector<int> &arr){
 }
 
 
-//////////////////// MCM //////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////// MCM //////////////////////////////////////////////////////////
 int matrix_chain_multiplication(vector<vector<int>> &dp, vector<int> &arr,int i,int j){
+    //call from i=1, j=n-1
     if(i>=j) return 0;
     if(dp[i][j]==-1){
         int mn=INT_MAX;
@@ -352,9 +366,77 @@ int matrix_chain_multiplication(vector<vector<int>> &dp, vector<int> &arr,int i,
     return dp[i][j];
 }
 
-int palindrome_patiotioning(string &s){
+int matrix_chain_multiplication_table(vector<int> &arr){
+    int n=arr.size();
+    vector<vector<int>> dp(n+1,vector<int>(n+1));
+    for(int i=0; i<=n; i++) for(int j=0; j<=n ;j++){
+        if(i<=j) dp[i][j]=0;
+        else{
+            int mn=INT_MAX;
+            for(int k=i; k<j; k++)
+        }
+    }
+    return dp[0][n];
+}
+
+bool isPalindrome(string &s,int i,int j){
+    while(i<j){if(s[i]!=s[j]) return false; i++,j--;}
+    return true;
+}
+
+int palindrome_patiotioning(string &s,int i,int j,vector<vector<int>> &dp){
     //minimum number of partition to make all substring palindrome
-    return 0;
+    if(i>=j) return 0;
+    if(isPalindrome(s,i,j)) return 0;
+    if(dp[i][j]==-1){
+        int ans=INT_MAX;
+        for(int k=i; k<j; k++){
+            int temp=1+palindrome_patiotioning(s,i,k,dp)+palindrome_patiotioning(s,k+1,j,dp);
+            if(ans>temp) ans=temp;
+        }
+        dp[i][j]=ans;
+    }
+    return dp[i][j];
+}
+int evaluate_expression_to_true(string &s){
+    //we have given a string made of "T, F, |, &, ^"
+    //make bracket such that whole expression will fall true
+    //count the number of ways it can 
+    //example "T|F&T"
+}
+
+/////////////////////////////// DP on Tree /////////////////////////////////
+struct TreeNode{
+    int val;
+    TreeNode *left,*right;
+    TreeNode(int v){
+        val=v;
+        left=right=NULL;
+    }
+};
+
+int diameter_of_a_tree(TreeNode* root,int &ans){//initial ans=INT_MIN;
+    if(root==NULL) return 0;
+    int l=diameter_of_a_tree(root->left,ans);
+    int r=diameter_of_a_tree(root->right,ans);
+    ans=max(ans,1+l+r);
+    return 1+max(l,r);
+}
+
+int maximum_path_sum_from_any_node_to_any_node(TreeNode*root,int &ans){
+    if(root==NULL) return 0;
+    int l=maximum_path_sum_from_any_node_to_any_node(root->left,ans);
+    int r=maximum_path_sum_from_any_node_to_any_node(root->right,ans);
+    ans=max(ans,root->val+l+r);
+    return max(root->val, max(l,r)+root->val);
+}
+
+int maximum_path_sum_from_leaf_node_to_leaf_node(TreeNode *root,int &ans){
+    if(root==NULL) return 0;
+    int l=maximum_path_sum_from_leaf_node_to_leaf_node(root->left,ans);
+    int r=maximum_path_sum_from_leaf_node_to_leaf_node(root->right,ans);
+    ans=max(ans,root->val+l+r);
+    return max(l,r)+root->val;
 }
 
 void solve(){

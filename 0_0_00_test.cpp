@@ -16,28 +16,26 @@ int32_t main(){ /* Author-Umang Maurya */
     if(true){int t,p=0; cin>>t; while(p<t){ p++;solve(p); cout<<nl;}}
     else {solve(1); cout<<nl;}
 }
-
 void solve(int t){
     int n;
     cin>>n;
-    int ans=0;
-    vector<int> arr(n),index(n);
-    for(auto &i: arr) cin>>i;
-    for(auto &i: index) cin>>i;
-
-    for(int i=n-1; i>0; i--){
-        vector<int> child;
-        for(int j=0; j<n; j++) if(index[j]==i) child.push_back(j);
-        if(child.size()>0){
-            int mn=INT_MAX,ind;
-            for(auto k: child) if(arr[k]<mn) mn=arr[k],ind=k;
-            arr[i-1]=max(arr[ind],arr[i-1]);
-            for(auto k: child) if(k!=ind) ans+=arr[k];
-        }
+    vector<int> arr;
+    int sum=0;
+    for(int i=1; i<=n; i++){
+        int v=2*i+1;
+        cout<<v<<spc;
+        sum+=v;
+        arr.push_back(v);
     }
-    for(int i=0; i<n; i++) if(index[i]==0) ans+=arr[i];
-    cout<<google(t)<<ans;
-
+    for(int i=0; i<n; i++){
+        int a;
+        cin>>a;
+        sum+=a;
+        arr.push_back(a);
+    }
+    if(sum&1==0){
+        
+    }
 }
 // void printArray(vector<int> &arr){
 //     for(auto i: arr) cout<<i<<spc;
