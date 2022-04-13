@@ -3,32 +3,27 @@
 pair<int,int> kth_smallest(vector<int> &arr,int k){
     //given a sorted list of prime number including 1 and we have to find kth smallest fraction
     //p/q
-    int start=0,last=arr.size();
-    int i=start,j=last,m=start+1,n=last-1;
-    while(k){
-        cout<<i<<spc<<j<<"--"<<m<<spc<<n<<nl;
-        k--;
-        if(i==j && m==n){
-            start++;
-            last--;
-            if(start==last) break;
-            i=start;
-            m=start+1;
-            j=last;
-            n=last-1;
-        }
-        double left=(arr[i]*1.0)/arr[j];
-        double right=(arr[m]*1.0)/arr[n];
-        if(left>right){
-            m++;
-            if(k==0) return{m,n};
-        }else{
-            i++;
-            if(k==0) return {i,j};
-        }
-        
+    //double,start,last
+    priority_queue<pair<double,pair<int,int>>,vector<pair<double,pair<int,int>>>, greater<pair<double,pair<int,int>>>> q;
+    int n=arr.size();
+    for(int i=0; i<n-1;i++){
+        double frac=(arr[i]*1.0)/arr[n-1];
+        q.push({frac,{i,n-1}});
     }
-    return {0,0};
+    k--;
+    while(k && !q.empty()){
+        auto top=q.top().second;
+        q.pop();
+        top.second--;
+        if(top.first!=top.second){
+            double frac=(arr[top.first]*1.0)/arr[top.second];
+            q.push({frac,top});
+        }
+        k--;
+    }
+    if(q.empty()) return {0,0};
+    return q.top().second;
+
 }
 
 void solve(){
@@ -37,4 +32,5 @@ void solve(){
     vector<int> arr(n);
     for(auto &i: arr) cin>>i;
     auto pr=kth_smallest(arr,6);
+    cout<<arr[pr.first]<<spc<<arr[pr.second]<<nl;
 }
