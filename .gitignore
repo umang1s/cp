@@ -1,8 +1,8 @@
 *.exe
 *.o
 *.class
-./aa_test.cpp
-./delete.cpp
-./temp.cpp
-./input.txt
-./0_0_00_test.cpp
+!./aa_test.cpp
+!./delete.cpp
+!./temp.cpp
+!./input.txt
+!./0_0_00_test.cpp
