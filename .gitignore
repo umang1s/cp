@@ -1,6 +1,7 @@
 *.exe
 *.o
 *.class
+*.txt
 ! aa_test.cpp
 ! delete.cpp
 ! temp.cpp
