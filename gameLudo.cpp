@@ -292,6 +292,7 @@ int main()
     setDisplayPath();
     if(x==2) gameContinueDuo();
     else gameContinueQuad();
+    setcolor(7);
     system("CLS");
     cout<<"press any key for exit";
     getch();

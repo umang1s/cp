@@ -16,26 +16,46 @@ int32_t main(){ /* Author-Umang Maurya */
     if(true){int t,p=0; cin>>t; while(p<t){ p++;solve(p); cout<<nl;}}
     else {solve(1); cout<<nl;}
 }
+
+void merge(vector<pair<int,int>> &arr,int low,int high,vector<int>&ans){
+    int mid=(low+high)/2;
+    vector<pair<int,int>> temp;
+    int i=low,j=mid+1;
+    int counter=0;
+    while(i<=mid && j<=high){
+        if(arr[i].first<arr[j].first) temp.push_back(arr[j]),j++,counter++;
+        else temp.push_back(arr[i]),ans[arr[i].second]+=counter, i++;
+    }
+    while(i<=mid) ans[arr[i].second]+=counter, temp.push_back(arr[i]),i++;
+    while(j<=high) temp.push_back(arr[j]),j++;
+    for(int i=low; i<=high; i++) arr[i]=temp[i-low];
+}
+
+void mergeSort(vector<pair<int,int>> &arr,int low,int high,vector<int>&ans){
+    if(low>=high) return;
+    int mid=(low+high)/2;
+    mergeSort(arr,low,mid,ans);
+    mergeSort(arr,mid+1,high,ans);
+    merge(arr,low,high,ans);
+}
 void solve(int t){
     int n;
     cin>>n;
-    vector<int> arr;
-    int sum=0;
-    for(int i=1; i<=n; i++){
-        int v=2*i+1;
-        cout<<v<<spc;
-        sum+=v;
-        arr.push_back(v);
-    }
+    vector<pair<int,int>> arr(n);
     for(int i=0; i<n; i++){
         int a;
         cin>>a;
-        sum+=a;
-        arr.push_back(a);
+        arr[i]={a,i};
     }
-    if(sum&1==0){
-        
-    }
+    vector<int> ans(n);
+    for(auto i: arr) cout<<i.first<<spc;
+    cout<<nl;
+    mergeSort(arr,0,n-1,ans);
+    for(auto i: arr) cout<<i.first<<spc;
+    cout<<nl;
+    for(auto i: ans) cout<<i<<spc;
+    cout<<nl;
+
 }
 // void printArray(vector<int> &arr){
 //     for(auto i: arr) cout<<i<<spc;

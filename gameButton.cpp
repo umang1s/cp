@@ -3,7 +3,7 @@
 using namespace std;
 int defCol=134;
 COORD c1,c2,c3;
-int delaying=5;
+int delaying=2;
 void makeSwitch(int x){
     setcolor(defCol);
     COORD useco,uperco,lowerco;
@@ -128,7 +128,7 @@ int main(){
     makeSwitch(1); makeSwitch(2); makeSwitch(3);
     makeButton(1);
     while(1){
-            key=getKey();
+            key=getch();
             //getting key
             if(key==UP){removeButton(cursor); cursor--; if(cursor==0) cursor=3; makeButton(cursor);}
             else if(key==DOWN) {removeButton(cursor); cursor++; if(cursor==4) cursor=1;makeButton(cursor);}
@@ -144,6 +144,10 @@ int main(){
                     b[closing] =!b[closing];
                 }
 
+            }else if(key=='q' || key=='Q'){
+                setcolor(7);
+                system("cls");
+                break;
             }
     }
 

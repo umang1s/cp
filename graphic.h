@@ -70,7 +70,7 @@ void showSeven(COORD coord ,int param,int z)//z=0 for horizontal
             coord.Y++;  setconsole(coord);
         }
 }
-void showS(COORD b,int param,char a[7])
+void showS(COORD b,int param,string a)
 {
     int k=4*param +1;
     if(!param) param=1;

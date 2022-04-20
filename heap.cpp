@@ -54,6 +54,13 @@ void heapSort(vector<int> &arr){
 
 }
 
+void update_node_in_min_heap(vector<int>&arr,int ind,int val){
+    arr[ind]=val;
+    int i=ind;
+    while(i!=0 && arr[i/2]>arr[i])swap(arr[i],arr[i/2]),i/=2;
+
+}
+
 
 
 void solve(){
